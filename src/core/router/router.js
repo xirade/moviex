@@ -5,11 +5,13 @@ class Router {
   #controller;
   #routes;
   #root;
+  #targetView;
 
   constructor(routes, root) {
     this.#routes = routes;
     this.#controller = null;
     this.#root = root;
+    this.#targetView = null;
   }
 
   set setController(controller) {
@@ -21,21 +23,32 @@ class Router {
     const { hash } = location;
 
     return {
-      routeName: hash ? hash.slice(1) : `#${Routes.Main}`,
+      routeName: !hash ? Routes.Main : hash.slice(1),
     };
   }
 
-  #hashChange() {
+  async updateView() {
     const routeInfo = this.getRouteInfo;
-    console.log(routeInfo.routeName);
+    const paramsForRender = await this.#controller.getViewParams(
+      routeInfo.routeName
+    );
+    if (this.#targetView) {
+      this.#targetView.update(...paramsForRender);
+    }
+  }
+
+  async #hashChange() {
+    const routeInfo = this.getRouteInfo;
     const TargetView = this.#routes[routeInfo.routeName] || FilmsView;
     if (TargetView) {
       this.#root.innerHTML = "";
-      const paramsForRender = this.#controller.getViewParams(
+      const paramsForRender = await this.#controller.getViewParams(
         routeInfo.routeName
       );
-      const targetView = new TargetView(this.#root);
-      targetView.render(...paramsForRender);
+      this.#targetView = new TargetView(this.#root);
+      this.#targetView.setHandleFavoriteButtonClick =
+        this.#controller.handleFavoriteButtonClick.bind(this.#controller);
+      this.#targetView.render(...paramsForRender);
     }
   }
 

@@ -6,6 +6,7 @@ class FavoritesView extends View {
   static #Text = {
     Title: "Your Favorite Films",
     SeeAllFilmsButtonText: "See All Films",
+    DefaultText: "No favorite films...",
   };
 
   render(favoriteFilmModels = []) {
@@ -25,10 +26,20 @@ class FavoritesView extends View {
 
     const filmsContainer = document.createElement("div");
     filmsContainer.className = "film-cards-container";
-    favoriteFilmModels.forEach((filmModel) => {
-      const filmHTML = renderFilmComponent({ filmModel });
-      filmsContainer.append(filmHTML);
-    });
+
+    if (favoriteFilmModels.length) {
+      favoriteFilmModels.forEach((filmModel) => {
+        const filmHTML = renderFilmComponent({
+          filmModel,
+          handleFavoriteButtonClick: this.getHandleFavoriteButtonClick,
+        });
+        filmsContainer.append(filmHTML);
+      });
+    } else {
+      const defaultHTML = document.createElement("span");
+      defaultHTML.textContent = FavoritesView.#Text.DefaultText;
+      filmsContainer.append(defaultHTML);
+    }
 
     container.append(filmsContainer);
     this.getRoot.append(container);

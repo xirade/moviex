@@ -3,10 +3,16 @@ import View from "./View";
 import renderFilmComponent from "@/core/components/filmComponent";
 
 class FilmsView extends View {
+  #filmsContainer;
   static #Text = {
     SeeFavoriteFilms: "See Favorite Films",
     Title: "All Films",
   };
+
+  constructor(root) {
+    super(root);
+    this.#filmsContainer = null;
+  }
 
   get renderSeeFavoriteButton() {
     const container = document.createElement("div");
@@ -23,6 +29,23 @@ class FilmsView extends View {
     return container;
   }
 
+  #renderFilms(filmModels = []) {
+    this.#filmsContainer = document.createElement("div");
+    this.#filmsContainer.className = "film-cards-container";
+
+    filmModels.forEach((filmModel) => {
+      const filmHTML = renderFilmComponent({
+        filmModel,
+        handleFavoriteButtonClick: this.getHandleFavoriteButtonClick,
+      });
+      this.#filmsContainer.append(filmHTML);
+    });
+  }
+
+  update(filmModels = []) {
+    this.#renderFilms(filmModels);
+  }
+
   render(filmModels = []) {
     const container = document.createElement("div");
     container.className = "films-container";
@@ -33,15 +56,9 @@ class FilmsView extends View {
       </h1>
         ${this.renderSeeFavoriteButton.outerHTML}
     `;
-    const filmsContainer = document.createElement("div");
-    filmsContainer.className = "film-cards-container";
-    filmModels.forEach((filmModel) => {
-      const filmHTML = renderFilmComponent({ filmModel });
-      filmsContainer.append(filmHTML);
-    });
+    this.#renderFilms(filmModels);
 
-    container.append(filmsContainer);
-
+    container.append(this.#filmsContainer);
     this.getRoot.append(container);
   }
 }

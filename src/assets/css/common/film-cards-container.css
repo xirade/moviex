@@ -13,10 +13,6 @@
   margin-bottom: 50px;
 }
 
-.film-cards-container__title {}
-
-.film-cards-container__link-button {}
-
 .film-cards-container__links-block {
   margin-bottom: 50px;
 }
@@ -34,7 +30,7 @@
     margin-right: 0;
   }
 
-  .film-cards-container .film-card:nth-child(2n+1) {
+  .film-cards-container .film-card:nth-child(2n + 1) {
     margin-right: 5%;
   }
 }

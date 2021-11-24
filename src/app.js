@@ -15,7 +15,7 @@ const routes = {
 };
 const root = document.getElementById("root");
 const router = new Router(routes, root);
-const filmsService = new FilmsService();
+const filmsService = new FilmsService()
 const controller = new FilmsController(router, filmsService);
-router.setController = controller;
+router.setController = controller
 controller.init();

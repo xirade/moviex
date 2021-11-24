@@ -10,7 +10,7 @@ class FilmModel {
     this.#title = filmData.Title;
     this.#year = filmData.Year;
     this.#imdbID = filmData.imdbID;
-    this.#isFavorite = false;
+    this.#isFavorite = filmData.isFavorite || false;
   }
 
   get getPoster() {

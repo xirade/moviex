@@ -14,25 +14,46 @@ class FilmsController {
     this.#favoriteFilms = [];
   }
 
-  getViewParams(routeName) {
-    let paramsForRender = [];
+  async #fetchAllFilms() {
+    if (this.#allFilms.length === 0) {
+      const data = await this.#service.getFilms();
+      if (!data.error) {
+        this.#allFilms = data;
+      }
+    }
+  }
 
+  async getViewParams(routeName) {
+    let paramsForRender = [];
+    await this.#fetchAllFilms();
+    this.#favoriteFilms = await this.#service.getFavoritesFilms();
     if (routeName === Routes.Main) {
       paramsForRender = [this.#allFilms];
     } else if (routeName === Routes.Favorites) {
       paramsForRender = [this.#favoriteFilms];
-    } else if (routeName === Routes.Film) {
+    } else if (routeName ===  Routes.Main) {
       paramsForRender = [];
     }
 
     return paramsForRender;
   }
 
+  async handleFavoriteButtonClick(isFavorite, filmId) {
+    isFavorite
+      ? await this.#service.removeFilmFromFavorites(
+          this.#allFilms,
+          this.#favoriteFilms,
+          filmId
+        )
+      : await this.#service.addFilmToFavorites(
+          this.#allFilms,
+          this.#favoriteFilms,
+          filmId
+        );
+    await this.#router.updateView();
+  }
+
   async init() {
-    this.#allFilms = await this.#service.getFilms();
-    this.#allFilms.forEach((filmModel) => {
-      console.log("title", filmModel.getTitle);
-    });
     this.#router.init();
   }
 }
