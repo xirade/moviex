@@ -5,4 +5,8 @@ const getFilmById = (films, filmId) => {
 const removeFilmById = (films, filmId) => {
   return films.filter((filmModel) => filmModel.getId !== filmId);
 };
-export { getFilmById, removeFilmById };
+
+const getLinkId = (film) => {
+  return film.id;
+};
+export { getFilmById, removeFilmById, getLinkId };

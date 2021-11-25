@@ -5,7 +5,7 @@ import View from "./View";
 class FavoritesView extends View {
   static #Text = {
     Title: "Your Favorite Films",
-    SeeAllFilmsButtonText: "See All Films",
+    SeeAllFilmsButtonText: "Back To Films",
     DefaultText: "No favorite films...",
   };
 
@@ -32,6 +32,7 @@ class FavoritesView extends View {
         const filmHTML = renderFilmComponent({
           filmModel,
           handleFavoriteButtonClick: this.getHandleFavoriteButtonClick,
+          handleFilmLinkClick: this.getHandleFilmLinkClick,
         });
         filmsContainer.append(filmHTML);
       });

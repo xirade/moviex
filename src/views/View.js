@@ -1,10 +1,12 @@
 class View {
   #handleFavoriteButtonClick;
+  #handleFilmLinkClick;
   #root;
 
   constructor(root) {
     this.#root = root;
     this.#handleFavoriteButtonClick = null;
+    this.#handleFilmLinkClick = null;
   }
 
   get getRoot() {
@@ -13,6 +15,13 @@ class View {
 
   get getHandleFavoriteButtonClick() {
     return this.#handleFavoriteButtonClick;
+  }
+
+  get getHandleFilmLinkClick() {
+    return this.#handleFilmLinkClick;
+  }
+  set setHandleFilmLinkClick(handleFilmLinkClick) {
+    this.#handleFilmLinkClick = handleFilmLinkClick;
   }
 
   set setHandleFavoriteButtonClick(handleFavoriteButtonClick) {

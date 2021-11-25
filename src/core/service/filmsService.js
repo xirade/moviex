@@ -6,6 +6,7 @@ import { removeFilmById, getFilmById } from "@/core/utils/films";
 
 class FilmsService {
   #storage;
+  #loader;
   static #DefaultSearchValue = "Marvel";
 
   static #Urls = {
@@ -56,11 +57,11 @@ class FilmsService {
 
   constructor() {
     this.#storage = window.localStorage;
+    this.#loader = loader();
   }
 
   async getFilms() {
-    const loaderHTML = loader();
-    document.querySelector("#root").append(loaderHTML);
+    document.querySelector("#root").append(this.#loader);
     try {
       const response = await fetch(FilmsService.#Urls.Main());
       const data = await response.json();
@@ -77,7 +78,14 @@ class FilmsService {
         error: error.message,
       };
     } finally {
-      loaderHTML.remove();
+      this.#loader.remove();
+    }
+  }
+
+  getFilm(allFilms, filmId) {
+    const targetFilm = getFilmById(allFilms, filmId);
+    if (targetFilm) {
+      return targetFilm;
     }
   }
 

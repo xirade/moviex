@@ -32,11 +32,11 @@ class FilmsView extends View {
   #renderFilms(filmModels = []) {
     this.#filmsContainer = document.createElement("div");
     this.#filmsContainer.className = "film-cards-container";
-
     filmModels.forEach((filmModel) => {
       const filmHTML = renderFilmComponent({
         filmModel,
         handleFavoriteButtonClick: this.getHandleFavoriteButtonClick,
+        handleFilmLinkClick: this.getHandleFilmLinkClick,
       });
       this.#filmsContainer.append(filmHTML);
     });

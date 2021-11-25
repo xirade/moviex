@@ -1,5 +1,4 @@
-import FilmsView from "@/views/FilmsView";
-import Routes from "@/core/constants/routes";
+import FilmView from "@/views/FilmView";
 
 class Router {
   #controller;
@@ -22,15 +21,18 @@ class Router {
     const { location } = window;
     const { hash } = location;
 
+    const filteredHash = hash.slice(1);
     return {
-      routeName: !hash ? Routes.Main : hash.slice(1),
+      routeName: filteredHash,
+      routeId: hash.split("/")[1],
     };
   }
 
   async updateView() {
     const routeInfo = this.getRouteInfo;
     const paramsForRender = await this.#controller.getViewParams(
-      routeInfo.routeName
+      routeInfo.routeName,
+      routeInfo.routeId
     );
     if (this.#targetView) {
       this.#targetView.update(...paramsForRender);
@@ -39,15 +41,20 @@ class Router {
 
   async #hashChange() {
     const routeInfo = this.getRouteInfo;
-    const TargetView = this.#routes[routeInfo.routeName] || FilmsView;
+    const TargetView = this.#routes[routeInfo.routeName] || FilmView;
     if (TargetView) {
       this.#root.innerHTML = "";
       const paramsForRender = await this.#controller.getViewParams(
-        routeInfo.routeName
+        routeInfo.routeName,
+        routeInfo.routeId
       );
       this.#targetView = new TargetView(this.#root);
+
       this.#targetView.setHandleFavoriteButtonClick =
         this.#controller.handleFavoriteButtonClick.bind(this.#controller);
+      this.#targetView.setHandleFilmLinkClick =
+        this.#controller.handleFilmLinkClick.bind(this.#controller);
+
       this.#targetView.render(...paramsForRender);
     }
   }

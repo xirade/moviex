@@ -6,6 +6,10 @@ class FilmsController {
   #allFilms;
   #favoriteFilms;
 
+  static changeRouteFilm(filmId) {
+    Routes.setFilmId = filmId;
+  }
+
   constructor(router, service) {
     this.#router = router;
     this.#service = service;
@@ -23,19 +27,30 @@ class FilmsController {
     }
   }
 
-  async getViewParams(routeName) {
+  async getViewParams(routeName, filmId) {
     let paramsForRender = [];
+
     await this.#fetchAllFilms();
     this.#favoriteFilms = await this.#service.getFavoritesFilms();
+    const film = this.#service.getFilm(this.#allFilms, filmId);
+
+    if (Routes.Film === "film") {
+      FilmsController.changeRouteFilm(filmId);
+    }
+
     if (routeName === Routes.Main) {
       paramsForRender = [this.#allFilms];
     } else if (routeName === Routes.Favorites) {
       paramsForRender = [this.#favoriteFilms];
-    } else if (routeName ===  Routes.Main) {
-      paramsForRender = [];
+    } else if (routeName === Routes.Film) {
+      paramsForRender = [film];
     }
-
     return paramsForRender;
+  }
+
+  async handleFilmLinkClick(filmId) {
+    FilmsController.changeRouteFilm(filmId);
+    await this.#router.updateView();
   }
 
   async handleFavoriteButtonClick(isFavorite, filmId) {
