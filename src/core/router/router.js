@@ -1,4 +1,5 @@
 import FilmView from "@/views/FilmView";
+import Routes from "@/core/constants/routes";
 
 class Router {
   #controller;
@@ -19,11 +20,10 @@ class Router {
 
   get getRouteInfo() {
     const { location } = window;
-    const { hash } = location;
-
+    let { hash } = location;
     const filteredHash = hash.slice(1);
     return {
-      routeName: filteredHash,
+      routeName: hash ? filteredHash : Routes.Main,
       routeId: hash.split("/")[1],
     };
   }
@@ -61,7 +61,7 @@ class Router {
 
   init() {
     window.addEventListener("hashchange", this.#hashChange.bind(this));
-    this.#hashChange();
+    this.#hashChange()
   }
 }
 
